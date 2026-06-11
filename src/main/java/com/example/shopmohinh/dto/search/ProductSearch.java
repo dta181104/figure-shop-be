@@ -31,4 +31,6 @@ public class ProductSearch extends SearchDto {
     private String sortBy;
 
     private String sortDirection;
+
+    private Boolean deleted;
 }

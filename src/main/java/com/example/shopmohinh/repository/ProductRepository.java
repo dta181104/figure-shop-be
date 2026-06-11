@@ -39,6 +39,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
                                  and (:#{#request.minPrice} is null or p.PRICE >= :#{#request.minPrice})
                                  and (:#{#request.maxPrice} is null or p.PRICE <= :#{#request.maxPrice})
                                  and (:#{#request.categoryId} is null or p.category_id = :#{#request.categoryId})
+                                 and (:#{#request.deleted} is null or p.DELETED = :#{#request.deleted})
                            order by
                                 case when :#{#request.sortBy} = 'HEIGHT' and :#{#request.sortDirection} = 'ASC' then p.HEIGHT end ASC,
                                 case when :#{#request.sortBy} = 'HEIGHT' and :#{#request.sortDirection} = 'DESC' then p.HEIGHT end DESC,

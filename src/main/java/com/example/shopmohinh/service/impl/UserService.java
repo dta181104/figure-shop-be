@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 //Thay thế cho @Autowired
@@ -124,7 +125,8 @@ public class UserService {
     }
 
     private Set<Role> getRolesFromRequest(List<String> roleCodes) {
-        Set<Role> roles = new HashSet<>();
+        // Sử dụng List để lưu tạm và sắp xếp, sau đó dùng LinkedHashSet để giữ thứ tự
+        List<Role> tempRoles = new ArrayList<>();
 
         // Nếu roleCodes null hoặc rỗng, gán role mặc định là "USER"
         if (roleCodes == null || roleCodes.isEmpty()) {
@@ -132,19 +134,22 @@ public class UserService {
             if (userRoleOptional.isEmpty()) {
                 throw new AppException(ErrorCode.ROLE_NOT_FOUND); // Nếu không tìm thấy role "USER"
             }
-            roles.add(userRoleOptional.get());
+            tempRoles.add(userRoleOptional.get());
         } else {
             // Lấy role từ danh sách roleCodes
             for (String roleCode : roleCodes) {
                 Optional<Role> userRoleOptional = roleRepository.findRoleByCode(roleCode);
                 if (userRoleOptional.isPresent()) {
-                    roles.add(userRoleOptional.get());
+                    tempRoles.add(userRoleOptional.get());
                 } else {
                     throw new AppException(ErrorCode.ROLE_NOT_FOUND);
                 }
             }
         }
-        return roles;
+        
+        // Sắp xếp tăng dần theo ID và đẩy vào LinkedHashSet
+        tempRoles.sort(Comparator.comparing(Role::getId));
+        return new LinkedHashSet<>(tempRoles);
     }
 
     @PreAuthorize("hasAuthority('SHOW_USER')")
@@ -180,7 +185,7 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-//    @PreAuthorize("hasAuthority('UPDATE_USER')")
+    @PreAuthorize("hasAuthority('UPDATE_USER')")
     public UserResponse userUpdate(String code, UserUpdateRequest request) {
         User user = userRepository.findByCode(code).
                 orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -207,7 +212,9 @@ public class UserService {
 
         if (request.getRoles() != null && !request.getRoles().isEmpty()) {
             var roles = roleRepository.findAllById(request.getRoles());
-            user.setRoles(new HashSet<>(roles));
+            List<Role> sortedRoles = new ArrayList<>(roles);
+            sortedRoles.sort(Comparator.comparing(Role::getId));
+            user.setRoles(new LinkedHashSet<>(sortedRoles));
         }
 
 
@@ -215,6 +222,7 @@ public class UserService {
     }
 
 
+    @PreAuthorize("hasAuthority('DELETE_USER')")
     public UserResponse deleteUser(String code){
         User user = userRepository.findByCode(code).
                 orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

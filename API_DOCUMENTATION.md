@@ -61,6 +61,117 @@
 - **Query Parameters:** email (String), newPassword (String)
 - **Request Body:** None
 
+## Bill API
+
+### GET /bills
+- **Description:** Retrieve all bills
+- **Request Body:** None
+- **Response:**
+```json
+[
+    {
+        "id": 1,
+        "paymentId": 1,
+        "customerId": 1,
+        "staffId": 1,
+        "code": "HD001",
+        "feeShip": 25.0,
+        "customerName": "Nguyễn Văn A",
+        "phone": "0987654321",
+        "email": "nguyenvana@example.com",
+        "note": "Giao hàng nhanh",
+        "totalMoney": 1500.0,
+        "status": "Đang xử lý",
+        "deleted": false,
+        "createdDate": "2024-05-22T10:00:00",
+        "updatedDate": "2024-05-22T10:00:00",
+        "updatedBy": "admin",
+        "createdBy": "admin",
+        "address": "123 Đường ABC, Quận 1, TP.HCM"
+    }
+]
+```
+
+### GET /bills/{id}
+- **Description:** Retrieve a specific bill by its ID
+- **Path Variables:** id (Long)
+- **Request Body:** None
+- **Response:**
+```json
+{
+    "id": 1,
+    "paymentId": 1,
+    "customerId": 1,
+    "staffId": 1,
+    "code": "HD001",
+    "feeShip": 25.0,
+    "customerName": "Nguyễn Văn A",
+    "phone": "0987654321",
+    "email": "nguyenvana@example.com",
+    "note": "Giao hàng nhanh",
+    "totalMoney": 1500.0,
+    "status": "Đang xử lý",
+    "deleted": false,
+    "createdDate": "2024-05-22T10:00:00",
+    "updatedDate": "2024-05-22T10:00:00",
+    "updatedBy": "admin",
+    "createdBy": "admin",
+    "address": "123 Đường ABC, Quận 1, TP.HCM"
+}
+```
+
+### GET /bills/user/{customerId}
+- **Description:** Retrieve all bills for a specific customer
+- **Path Variables:** customerId (Long)
+- **Request Body:** None
+- **Response:**
+```json
+[
+    {
+        "id": 1,
+        "paymentId": 1,
+        "customerId": 1,
+        "staffId": 1,
+        "code": "HD001",
+        "feeShip": 25.0,
+        "customerName": "Nguyễn Văn A",
+        "phone": "0987654321",
+        "email": "nguyenvana@example.com",
+        "note": "Giao hàng nhanh",
+        "totalMoney": 1500.0,
+        "status": "Đang xử lý",
+        "deleted": false,
+        "createdDate": "2024-05-22T10:00:00",
+        "updatedDate": "2024-05-22T10:00:00",
+        "updatedBy": "admin",
+        "createdBy": "admin",
+        "address": "123 Đường ABC, Quận 1, TP.HCM"
+    }
+]
+```
+
+### PUT /bills/{id}
+- **Description:** Update an existing bill
+- **Path Variables:** id (Long)
+- **Request Body:** BillUpdateRequest
+```json
+{
+    "status": "Đã giao hàng",
+    "customerName": "Nguyễn Văn B",
+    "phone": "0912345678",
+    "email": "nguyenvanb@example.com",
+    "address": "456 Đường XYZ, Quận 2, TP.HCM",
+    "note": "Khách đã nhận hàng"
+}
+```
+- **Response:** Returns the updated BillResponse object
+
+### DELETE /bills/{id}
+- **Description:** Soft delete a bill
+- **Path Variables:** id (Long)
+- **Request Body:** None
+- **Response:** Empty response body with 200 OK status
+
 ## Brand API
 
 ### GET /brand

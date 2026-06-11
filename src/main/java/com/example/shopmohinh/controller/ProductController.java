@@ -35,7 +35,8 @@ public class ProductController {
             @RequestParam(value = "maxPrice", required = false) BigDecimal maxPrice,
             @RequestParam(value = "categoryId", required = false) Long categoryId,
             @RequestParam(value = "sortBy", required = false) String sortBy,
-            @RequestParam(value = "sortDirection", required = false) String sortDirection
+            @RequestParam(value = "sortDirection", required = false) String sortDirection,
+            @RequestParam(value = "deleted", required = false) Boolean deleted
     ){
         ProductSearch productSearch = new ProductSearch();
         productSearch.setPageIndex(pageIndex);
@@ -46,6 +47,7 @@ public class ProductController {
         productSearch.setCategoryId(categoryId);
         productSearch.setSortBy(sortBy);
         productSearch.setSortDirection(sortDirection);
+        productSearch.setDeleted(deleted);
 
         return ApiResponse.<Page<ProductResponse>>builder()
                 .result(productService.getProduct(productSearch))
